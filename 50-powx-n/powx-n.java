@@ -6,18 +6,23 @@ class Solution {
             nn=nn*-1;
         
         }
-        while(nn>0){
-            if(nn%2==0){
-                x=x*x;
-                nn=nn/2;
-            }
-            else{
-                ans=ans*x;
-                nn=nn-1;
-            }
+        double result=calPow(x,nn);
+        if(n<0){
+            return 1.0/result;
         }
-        if(n<0) ans=(double)(1.0)/ans;
-        return ans;
+        return (double)result;
         
+    }
+    public double calPow(double x,long nn){
+        if(nn==0){
+            return 1;
+        }
+        else if(nn%2==0){
+            return calPow(x*x,nn/2);
+        }
+        else if(nn%2==1){
+            return x*calPow(x*x,nn/2);
+        }
+        return 1;
     }
 }
