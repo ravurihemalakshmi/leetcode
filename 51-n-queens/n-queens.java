@@ -5,10 +5,13 @@ class Solution {
         for(int i=0;i<n;i++){
             Arrays.fill(board[i],'.');
         }
-        solve(0,n,board,ans);
+        boolean[] leftrow=new boolean[n];
+        boolean[] lowerleftdiagnol=new boolean[2*n-1];
+        boolean[] upperleftdiagnol=new boolean[2*n-1];
+        solve(0,n,board,leftrow,lowerleftdiagnol,upperleftdiagnol,ans);
         return ans; 
     }
-    public void solve(int col,int n,char[][]board,List<List<String>>ans){
+    public void solve(int col,int n,char[][]board,boolean[]leftrow,boolean[]lowerleftdiagnol,boolean[] upperleftdiagnol,List<List<String>>ans){
         if(col==n){
             List<String>temp=new ArrayList<>();
             for(int i=0;i<n;i++){
@@ -19,39 +22,23 @@ class Solution {
 
         }
         for(int row=0;row<n;row++){
-            if(isSafe(row,col,board,n)){
-                board[row][col]='Q';
-                solve(col+1,n,board,ans);
-                board[row][col]='.';
+            if(leftrow[row]||lowerleftdiagnol[row+col]||upperleftdiagnol[n-1+row-col]){
+                continue;
             }
+            board[row][col]='Q';
+            leftrow[row]=true;
+            lowerleftdiagnol[row+col]=true;
+            upperleftdiagnol[n-1+row-col]=true;
+            solve(col+1,n,board,leftrow,lowerleftdiagnol,upperleftdiagnol,ans);
+            board[row][col]='.';
+            leftrow[row]=false;
+            lowerleftdiagnol[row+col]=false;
+            upperleftdiagnol[n-1+row-col]=false;
+
         }
 
     }
-    public boolean isSafe(int row,int col,char[][] board,int n){
-        int duprow=row;
-        int dupcol=col;
-        while(row>=0&&col>=0){
-            if(board[row][col]=='Q') return false;
-            row--;
-            col--;
-        }
-        row=duprow;
-        col=dupcol;
-        while(col>=0){
-            if(board[row][col]=='Q') return false;
-            col--;
-        }
-        row=duprow;
-        col=dupcol;
-        while(row<n&&col>=0){
-            if(board[row][col]=='Q'){
-                return false;
-            }
-            row++;
-            col--;
-        }
-        return true;
-    }
+    
     
 
 }
